@@ -706,12 +706,18 @@ export class LiveSocket {
     })
     this.bind({blur: "focusout", focus: "focusin"}, (e, type, view, targetEl, targetCtx, phxEvent, phxTarget) => {
       if(!phxTarget){
+        if(e.type === "focusin"){
+          DOM.putPrivate(targetEl, PHX_HAS_FOCUSED, true);
+        }
         view.pushEvent(type, targetEl, targetCtx, phxEvent, this.eventMeta(type, e, targetEl))
       }
     })
     this.bind({blur: "blur", focus: "focus"}, (e, type, view, targetEl, targetCtx, phxEvent, phxTarget) => {
       // blur and focus are triggered on document and window. Discard one to avoid dups
       if(phxTarget && !phxTarget !== "window"){
+        if(e.type === "focus"){
+          DOM.putPrivate(targetEl, PHX_HAS_FOCUSED, true);
+        }
         view.pushEvent(type, targetEl, targetCtx, phxEvent, this.eventMeta(type, e, targetEl))
       }
     })
